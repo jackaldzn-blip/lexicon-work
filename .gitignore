@@ -1,2 +1,18 @@
+# Ignore everything at repository root
+/*
 
+# Keep this .gitignore
+!/.gitignore
+
+# Keep these project folders
+!/algorithm-flowchart/
+!/git-github-workshop/
+!/hello-world-workshop/
+!/java-fundamental/
+
+# Ignore generated Maven build folders anywhere
 **/target/
+
+# Common generated/system files
+.DS_Store
+Thumbs.db
