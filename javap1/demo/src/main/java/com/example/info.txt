@@ -1,0 +1,33 @@
+mvn clean compile
+does not run your program. It only verifies that the main source code can be compiled.
+clean removes the previous build output, mainly the target folder
+compile then reads your pom.xml
+
+Main.java
+   ↓
+mvn clean compile
+   ↓
+Maven reads pom.xml
+   ↓
+old target/ deleted
+   ↓
+Java source compiled
+   ↓
+target/classes/com/example/Main.class
+
+
+These common commands build progressively further:
+mvn clean
+mvn compile
+mvn test
+mvn package
+mvn clean package
+
+---------------
+
+mvn compile
+java -cp target\classes com.example.Main
+
+
+format java
+Shift + Alt + F
