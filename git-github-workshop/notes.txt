@@ -1,0 +1,3 @@
+Git workshop notes
+Practicing staging and commits
+Testing multiple file changes

@@ -1,12 +1,10 @@
 package se.lexicon;
 
 public class Exercise1 {
-
     public static void main(String[] args) {
-
-        String name = "Anas";
-        int age = 45;
-        String city = "Kalmar";
+        String name = "Sofia";
+        int age = 22;
+        String city = "Stockholm";
 
         System.out.println("====================");
         System.out.println("     My Profile");
