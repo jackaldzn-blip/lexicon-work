@@ -5,19 +5,18 @@ import java.util.Scanner;
 
 public class CafeApp {
     private static final String[] ITEMS = {
-        "Espresso", "Cappuccino", "Latte", "Croissant", "Sandwich"
+            "Espresso", "Cappuccino", "Latte", "Croissant", "Sandwich"
     };
-    private static final double[] PRICES = {25.0, 35.0, 40.0, 30.0, 55.0};
+    private static final double[] PRICES = { 25.0, 35.0, 40.0, 30.0, 55.0 };
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Welcome! What is your name? ");
-        String customerName = scanner.nextLine().trim();
+        String customerName = readCustomerName(scanner);
         System.out.println("Hi " + customerName + "! Here is our menu:\n");
         displayMenu();
 
-        int itemNumber = readNumber(scanner, "Enter item number (1-5): ", 1, 5);
+        int itemNumber = readNumber(scanner, "Enter item number (1-" + ITEMS.length + "): ", 1, ITEMS.length);
         int quantity = readNumber(scanner, "How many? ", 1, Integer.MAX_VALUE);
         boolean isMember = readMembership(scanner);
 
@@ -29,6 +28,17 @@ public class CafeApp {
         printReceipt(customerName, ITEMS[itemNumber - 1], quantity,
                 subtotal, discount, vat, total);
         scanner.close();
+    }
+
+    private static String readCustomerName(Scanner scanner) {
+        while (true) {
+            System.out.print("Welcome! What is your name? ");
+            String name = scanner.nextLine().trim();
+            if (!name.isEmpty()) {
+                return name;
+            }
+            System.out.println("Name cannot be empty. Please try again.");
+        }
     }
 
     private static void displayMenu() {
@@ -59,11 +69,13 @@ public class CafeApp {
 
     private static boolean readMembership(Scanner scanner) {
         while (true) {
-            System.out.print("Loyalty member? (yes/no): ");
+            System.out.print("Loyalty member? (y/n): ");
             String answer = scanner.nextLine().trim();
-            if (answer.equalsIgnoreCase("yes")) return true;
-            if (answer.equalsIgnoreCase("no")) return false;
-            System.out.println("Please enter yes or no.");
+            if (answer.equalsIgnoreCase("y"))
+                return true;
+            if (answer.equalsIgnoreCase("n"))
+                return false;
+            System.out.println("Please enter y or n.");
         }
     }
 
@@ -72,8 +84,10 @@ public class CafeApp {
     }
 
     private static double calculateDiscount(double subtotal, boolean isMember) {
-        if (isMember) return subtotal * 0.15;
-        if (subtotal > 150.0) return subtotal * 0.10;
+        if (isMember)
+            return subtotal * 0.15;
+        if (subtotal > 150.0)
+            return subtotal * 0.10;
         return 0.0;
     }
 
@@ -86,7 +100,7 @@ public class CafeApp {
     }
 
     private static void printReceipt(String customer, String item, int quantity,
-                                     double subtotal, double discount, double vat, double total) {
+            double subtotal, double discount, double vat, double total) {
         System.out.println("\n==============================");
         System.out.println("      LEXICON CAFE");
         System.out.println("==============================");
