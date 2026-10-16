@@ -1,4 +1,4 @@
-package se.lexicon.exercises.part2;
+package se.lexicon;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package se.lexicon.exercises.part2;
+package se.lexicon;
 
 import java.util.Locale;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package se.lexicon.exercises.part2;
+package se.lexicon;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
