@@ -18,16 +18,17 @@ public class NumberCruncher {
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter first number : ");
-        int a = scanner.nextInt();
-        System.out.print("Enter second number: ");
-        int b = scanner.nextInt();
-        System.out.print("Enter third number : ");
-        int c = scanner.nextInt();
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.print("Enter first number : ");
+            int a = scanner.nextInt();
+            System.out.print("Enter second number: ");
+            int b = scanner.nextInt();
+            System.out.print("Enter third number : ");
+            int c = scanner.nextInt();
 
-        System.out.println("Maximum : " + findMax(a, b, c));
-        System.out.println("Minimum : " + findMin(a, b, c));
-        System.out.printf(Locale.US, "Average : %.2f%n", average(a, b, c));
+            System.out.println("Maximum : " + findMax(a, b, c));
+            System.out.println("Minimum : " + findMin(a, b, c));
+            System.out.printf(Locale.US, "Average : %.2f%n", average(a, b, c));
+        }
     }
 }
