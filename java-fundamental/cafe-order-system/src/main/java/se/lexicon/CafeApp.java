@@ -4,118 +4,82 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class CafeApp {
-    private static final String[] ITEMS = {
-            "Espresso", "Cappuccino", "Latte", "Croissant", "Sandwich"
-    };
-    private static final double[] PRICES = { 25.0, 35.0, 40.0, 30.0, 55.0 };
+    // Shared menu for both the console and the GUI.
+    static final String[] ITEMS = {"Espresso", "Cappuccino", "Latte", "Croissant", "Sandwich"};
+    static final double[] PRICES = {25, 35, 40, 30, 55};
+    static final int MAX_QUANTITY = 20;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        int customers = 0;
+        double revenue = 0;
 
-        String customerName = readCustomerName(scanner);
-        System.out.println("Hi " + customerName + "! Here is our menu:\n");
-        displayMenu();
-
-        int itemNumber = readNumber(scanner, "Enter item number (1-" + ITEMS.length + "): ", 1, ITEMS.length);
-        int quantity = readNumber(scanner, "How many? ", 1, Integer.MAX_VALUE);
-        boolean isMember = readMembership(scanner);
-
-        double subtotal = calculateSubtotal(PRICES[itemNumber - 1], quantity);
-        double discount = calculateDiscount(subtotal, isMember);
-        double vat = calculateVat(subtotal - discount);
-        double total = calculateTotal(subtotal, discount, vat);
-
-        printReceipt(customerName, ITEMS[itemNumber - 1], quantity,
-                subtotal, discount, vat, total);
-        scanner.close();
-    }
-
-    private static String readCustomerName(Scanner scanner) {
+        // Challenge 1: repeat until the cashier enters done.
         while (true) {
-            System.out.print("Welcome! What is your name? ");
+            System.out.print("Next customer name (or 'done' to close): ");
             String name = scanner.nextLine().trim();
-            if (!name.isEmpty()) {
-                return name;
+            if (name.equalsIgnoreCase("done")) break;
+            if (name.isEmpty()) {
+                System.out.println("Please enter a name.");
+                continue;
             }
-            System.out.println("Name cannot be empty. Please try again.");
-        }
-    }
 
-    private static void displayMenu() {
-        System.out.println("==============================");
-        System.out.println("       Lexicon Cafe");
-        System.out.println("==============================");
-        for (int i = 0; i < ITEMS.length; i++) {
-            System.out.printf(Locale.US, "%d. %-16s %5.2f SEK%n", i + 1, ITEMS[i], PRICES[i]);
-        }
-        System.out.println("==============================\n");
-    }
+            System.out.println("Hi " + name + "! Here is our menu:\n");
+            showMenu();
+            boolean member = readMembership(scanner);
+            Order order = new Order(name, member); // Challenge 3
 
-    private static int readNumber(Scanner scanner, String prompt, int minimum, int maximum) {
-        while (true) {
-            System.out.print(prompt);
-            String input = scanner.nextLine().trim();
-            try {
-                int value = Integer.parseInt(input);
-                if (value >= minimum && value <= maximum) {
-                    return value;
+            // Challenge 4: collect multiple products in one order.
+            while (true) {
+                int number = readNumber(scanner, "Item number (0 to finish): ", 0, ITEMS.length);
+                if (number == 0) {
+                    if (!order.items.isEmpty()) break;
+                    System.out.println("Please add at least one item.");
+                    continue;
                 }
-            } catch (NumberFormatException ignored) {
-                // Ask again below.
+                int quantity = readNumber(scanner, "How many? ", 1, MAX_QUANTITY);
+                order.addItem(ITEMS[number - 1], PRICES[number - 1], quantity);
+                System.out.println(ITEMS[number - 1] + " added.\n");
             }
-            System.out.println("Invalid number. Please try again.");
+
+            order.printReceipt();
+            customers++;
+            revenue += order.total();
+        }
+
+        System.out.println("\n======= END OF DAY =======");
+        System.out.println("Customers served: " + customers);
+        System.out.printf(Locale.US, "Total revenue: %.2f SEK%n", revenue);
+    }
+
+    static void showMenu() {
+        System.out.println("======= LEXICON CAFE =======");
+        for (int i = 0; i < ITEMS.length; i++) {
+            System.out.printf(Locale.US, "%d. %-12s %.2f SEK%n", i + 1, ITEMS[i], PRICES[i]);
         }
     }
 
-    private static boolean readMembership(Scanner scanner) {
+    // Challenge 2: read a number and ask again if it is invalid.
+    static int readNumber(Scanner scanner, String question, int min, int max) {
         while (true) {
-            System.out.print("Loyalty member? (y/n): ");
+            System.out.print(question);
+            try {
+                int number = Integer.parseInt(scanner.nextLine().trim());
+                if (number >= min && number <= max) return number;
+            } catch (NumberFormatException e) {
+                // Non-numeric input; show the same message below.
+            }
+            System.out.println("Enter a number between " + min + " and " + max + ".");
+        }
+    }
+
+    static boolean readMembership(Scanner scanner) {
+        while (true) {
+            System.out.print("Loyalty member? (yes/no): ");
             String answer = scanner.nextLine().trim();
-            if (answer.equalsIgnoreCase("y"))
-                return true;
-            if (answer.equalsIgnoreCase("n"))
-                return false;
-            System.out.println("Please enter y or n.");
+            if (answer.equalsIgnoreCase("yes")) return true;
+            if (answer.equalsIgnoreCase("no")) return false;
+            System.out.println("Please enter yes or no.");
         }
-    }
-
-    private static double calculateSubtotal(double unitPrice, int quantity) {
-        return unitPrice * quantity;
-    }
-
-    private static double calculateDiscount(double subtotal, boolean isMember) {
-        if (isMember)
-            return subtotal * 0.15;
-        if (subtotal > 150.0)
-            return subtotal * 0.10;
-        return 0.0;
-    }
-
-    private static double calculateVat(double discountedAmount) {
-        return discountedAmount * 0.12;
-    }
-
-    private static double calculateTotal(double subtotal, double discount, double vat) {
-        return subtotal - discount + vat;
-    }
-
-    private static void printReceipt(String customer, String item, int quantity,
-            double subtotal, double discount, double vat, double total) {
-        System.out.println("\n==============================");
-        System.out.println("      LEXICON CAFE");
-        System.out.println("==============================");
-        System.out.println("Customer  : " + customer);
-        System.out.println("Item      : " + item + " x " + quantity);
-        System.out.printf(Locale.US, "Subtotal  : %.2f SEK%n", subtotal);
-        if (discount > 0) {
-            System.out.printf(Locale.US, "Discount  : -%.2f SEK%n", discount);
-        }
-        System.out.printf(Locale.US, "VAT       : %.2f SEK%n", vat);
-        System.out.println("------------------------------");
-        System.out.printf(Locale.US, "TOTAL     : %.2f SEK%n", total);
-        System.out.println("==============================");
-        System.out.println("   Thank you, " + customer + "!");
-        System.out.println("   See you next time.");
-        System.out.println("==============================");
     }
 }
