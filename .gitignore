@@ -8,7 +8,7 @@
 !/algorithm-flowchart/
 !/git-github-workshop/
 !/hello-world-workshop/
-!/java-fundamental/
+!/java-fundamentals/
 
 # Ignore generated Maven build folders anywhere
 **/target/
