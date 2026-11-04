@@ -24,19 +24,6 @@ The `pom.xml` identifies `src/main/java` as the application source folder and le
 Expected updated balances: Ali **1020.00 kr**, Sara **475.00 kr**, Omar **5150.00 kr**.
 
 
-## Manual compile (PowerShell)
-
-From `Exercise1_Bank`:
-
-```powershell
-$java = @(Get-ChildItem .\src\main\java\*.java | ForEach-Object FullName)
-$tests = @(Get-ChildItem .\src\test\java\*.java | ForEach-Object FullName)
-New-Item -ItemType Directory -Force out | Out-Null
-javac -d out @java @tests
-java -cp out App
-java -ea -cp out BankExerciseTest
-```
-
 ## UML diagrams
 
 Open the `UML_Diagrams/*.md` files in GitHub or a VS Code Markdown preview with Mermaid support.
