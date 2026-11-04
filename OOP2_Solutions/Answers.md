@@ -23,12 +23,6 @@ The complete Java implementation is in `Exercise1_Bank/src/`:
 | Checking (Sara) | 500.00 kr | -25.00 kr | 475.00 kr |
 | Loan (Omar) | 5,000.00 kr | +150.00 kr (3%) | 5,150.00 kr |
 
-### Think: How does Java know which `processMonth()` to run?
-
-**Runtime polymorphism / dynamic method dispatch:** Each element of `List<Account>` is an `Account` reference, but Java executes the overridden `processMonth()` method belonging to the actual object (`SavingsAccount`, `CheckingAccount` or `LoanAccount`). The loop does not need `instanceof` or `if` statements.
-
-`new Account("Ali", 1000)` is invalid because **`Account` is abstract**. Abstract classes cannot be instantiated directly, and the abstract `processMonth()` must be implemented by a concrete subclass.
-
 ## Exercise 2 — University Departments
 
 ```mermaid
