@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Run OOP2 Bank (App)",
+      "request": "launch",
+      "mainClass": "App",
+      "projectName": "oop2-exercise1-bank-solution",
+      "console": "integratedTerminal"
+    }
+  ]
+}

@@ -6,9 +6,11 @@
 
 # Keep these project folders
 !/algorithm-flowchart/
+!/contact-workshop/
 !/git-github-workshop/
 !/hello-world-workshop/
 !/java-fundamentals/
+!/OOP2_Solutions/
 
 # Ignore generated Maven build folders anywhere
 **/target/
