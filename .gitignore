@@ -11,6 +11,7 @@
 !/hello-world-workshop/
 !/java-fundamentals/
 !/OOP2_Solutions/
+!/lexicon-vending-machine/
 
 # Ignore generated Maven build folders anywhere
 **/target/
