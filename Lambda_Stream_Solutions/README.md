@@ -1,14 +1,14 @@
 # Lambda & Stream exercises
 
-This project solves **all core and optional exercises** from `Exercises.md` using the same simple lambda and Stream syntax practiced in class.
+This project solves **all core and optional exercises** from `Exercises.md` using lambda and Stream syntax.
 
 ## Start here
 
 Open `src/main/java/se/lexicon/lambdastream/Main.java` and read from top to bottom.
 
-- **Part 1** uses simple lambdas and normal `for` loops.
-- **Part 2** uses short Stream pipelines directly in `main`.
-- **OptionalExercises.java** contains all the extra-practice tasks. You can ignore it until you are comfortable with `Main.java`.
+- **Part 1** uses lambdas and normal `for` loops.
+- **Part 2** uses Stream pipelines directly in `main`.
+- **OptionalExercises.java** contains all the extra-practice tasks.
 
 ## Classes
 
