@@ -12,6 +12,7 @@
 !/java-fundamentals/
 !/OOP2_Solutions/
 !/lexicon-vending-machine/
+!/Lambda_Stream_Solutions/
 
 # Ignore generated Maven build folders anywhere
 **/target/
