@@ -23,6 +23,7 @@ public class Bank {
     }
 
     public void printAllSummaries() {
+        System.out.println("Bank: " + name);
         for (Account account : accounts) {
             account.printSummary();
         }

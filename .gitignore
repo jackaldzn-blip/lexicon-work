@@ -13,6 +13,7 @@
 !/OOP2_Solutions/
 !/lexicon-vending-machine/
 !/Lambda_Stream_Solutions/
+!/exception-exercises/
 
 # Ignore generated Maven build folders anywhere
 **/target/
