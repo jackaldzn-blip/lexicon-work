@@ -1,22 +1,50 @@
-# Java Exception Handling — 8 solved exercises
+# Java Exception Handling — 8 Exercises
 
-Beginner-friendly solutions for all eight tasks in `Exception_Exercises.md`. Each exercise is an independent Java console application.
+Solutions for all eight exercises in [Exception_Exercises.md](Exception_Exercises.md).
 
-## VS Code / Maven
+**One Maven project, one `pom.xml`.** The exercises are independent Java programs organized into eight packages inside the standard Maven source directory. No separate Maven modules are needed.
 
-The parent `pom.xml` defines **eight Maven modules**. Each exercise folder is its own source root, preserving its default-package classes and helping VS Code's Java extension recognize them as projects.
+## Folder structure
 
-- Open the repository in VS Code and allow the Java / Maven extensions to import the projects.
-- From the repository root run `mvn -f exception-exercises/pom.xml compile` to compile all exercises.
-- Or open `Exercise1.java` (or any other exercise) and select **Run** after Java project import.
+```text
+exception-exercises/
+├── pom.xml
+├── src/main/java/se/lexicon/exceptions/
+│   ├── exercise01/Exercise1.java
+│   ├── exercise02/Exercise2.java, OutOfRangeException.java
+│   ├── exercise03/Exercise3.java, BankAccount.java, InsufficientBalanceException.java
+│   ├── exercise04/Exercise4.java
+│   ├── exercise05/Exercise5.java
+│   ├── exercise06/Exercise6.java
+│   ├── exercise07/Exercise7.java, NameManager.java, DuplicateNameException.java, NameNotFoundException.java
+│   └── exercise08/Exercise8.java
+├── samples/exercise-04/numbers.txt
+├── samples/exercise-04/numbers-invalid.txt
+├── run.ps1
+└── run.sh
+```
 
-Requires **JDK 17+**. Maven is optional when using the run scripts.
+## VS Code
 
-If Java still reports a non-project file or an outdated Maven project, run **Java: Clean Java Language Server Workspace**, restart, then run **Java: Import Java Projects** or **Java: Update Project**.
+Open the `lexicon-work` repository in VS Code with the Java Extension Pack installed. Maven should import `exception-exercises/pom.xml` automatically. This project uses the standard source path `src/main/java` so Java files should be recognized as project files.
 
-## Run without Maven
+1. Expand `exception-exercises/src/main/java/se/lexicon/exceptions`.
+2. Choose an exercise package and open its `ExerciseN.java`.
+3. Select **Run** above `main`.
 
-From the `exception-exercises` folder, use PowerShell:
+If VS Code still reports **"non-project file"**, open Command Palette (`Ctrl+Shift+P`), run **Java: Clean Java Language Server Workspace**, choose **Restart and delete**, and then **Java: Import Java Projects** or **Java: Update Project**.
+
+## Build
+
+Requires Java 17 or later. From the repository root:
+
+```powershell
+mvn -f exception-exercises/pom.xml clean compile
+```
+
+## Run an exercise
+
+To run without Maven, open PowerShell in the `exception-exercises` directory:
 
 ```powershell
 .\run.ps1 1
@@ -29,32 +57,19 @@ From the `exception-exercises` folder, use PowerShell:
 .\run.ps1 8
 ```
 
-On Linux / macOS: `./run.sh 1` (replace 1 with an exercise number from 1 through 8).
+On Linux/macOS use `./run.sh 1` (replace the number with an exercise between 1 and 8).
 
-Scripts compile each exercise independently and put generated classes in ignored `build/` output directories.
+Each run script compiles the entire Java project into the ignored `build/classes` directory and launches only the chosen main class.
 
-## Exercise guide
+## Notes
 
-| # | Topic | Main program |
-| --- | --- | --- |
-| 1 | Division by zero, invalid input | `exercise-01/Exercise1.java` |
-| 2 | Custom out-of-range exception | `exercise-02/Exercise2.java` |
-| 3 | Banking and insufficient balance | `exercise-03/Exercise3.java` |
-| 4 | Nested file and numeric parsing errors | `exercise-04/Exercise4.java` |
-| 5 | `finally` block | `exercise-05/Exercise5.java` |
-| 6 | Email validation and `IllegalArgumentException` | `exercise-06/Exercise6.java` |
-| 7 | Duplicate and missing names | `exercise-07/Exercise7.java` |
-| 8 | File writing with try-with-resources | `exercise-08/Exercise8.java` |
-
-## Verify behavior
-
-- Exercise 1: enter 10 then 0; it handles division by zero.
-- Exercise 2: try 50, abc, 150.
-- Exercise 3: withdraw more than the available balance.
-- Exercise 4: run from `exercise-04`; enter `numbers.txt`, `numbers-invalid.txt` or `missing.txt`.
-- Exercise 5: enter 10 then 0; the finally message prints as well.
+- Exercise 1: try first number `10` and second number `0`.
+- Exercise 2: try `50`, `abc` and `150`.
+- Exercise 3: deposit funds, withdraw funds, then try to withdraw more than the balance.
+- Exercise 4: the default sample is `samples/exercise-04/numbers.txt`. For parsing errors use `samples/exercise-04/numbers-invalid.txt`, and for missing-file errors use `missing.txt`.
+- Exercise 5: test division by zero; the `finally` message still appears.
 - Exercise 6: test `name@example.com` and `not-an-email`.
-- Exercise 7: add Alice twice; search for Nobody.
-- Exercise 8: enter a sentence and inspect `output.txt` in the current directory.
+- Exercise 7: add Alice twice, then search for an unknown name.
+- Exercise 8: the text is written to `output.txt` in the working directory and the file is ignored by Git.
 
-Each program has an independent `main` method. Input scanners are closed by try-with-resources. Banking uses `double` for classroom simplicity; real financial systems should use `BigDecimal`.
+`BankAccount` uses `double` for teaching purposes; production financial systems should use decimal monetary types such as `BigDecimal`.

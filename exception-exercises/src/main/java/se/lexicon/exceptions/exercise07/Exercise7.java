@@ -1,3 +1,5 @@
+package se.lexicon.exceptions.exercise07;
+
 import java.util.Scanner;
 
 public class Exercise7 {

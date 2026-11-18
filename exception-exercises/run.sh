@@ -7,8 +7,10 @@ if [[ $# -ne 1 || ! "$1" =~ ^[1-8]$ ]]; then
 fi
 
 base_dir="$(cd "$(dirname "$0")" && pwd)"
-folder="$(printf 'exercise-%02d' "$1")"
-mkdir -p "$base_dir/build/$folder"
-cd "$base_dir/$folder"
-javac -encoding UTF-8 -d "$base_dir/build/$folder" ./*.java
-java -cp "$base_dir/build/$folder" "Exercise$1"
+class_dir="$base_dir/build/classes"
+mkdir -p "$class_dir"
+cd "$base_dir"
+mapfile -d '' sources < <(find src/main/java -type f -name '*.java' -print0)
+javac -encoding UTF-8 -d "$class_dir" "${sources[@]}"
+package_suffix="$(printf 'exercise%02d' "$1")"
+java -cp "$class_dir" "se.lexicon.exceptions.${package_suffix}.Exercise$1"

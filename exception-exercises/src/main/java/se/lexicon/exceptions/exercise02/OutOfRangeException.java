@@ -1,3 +1,5 @@
+package se.lexicon.exceptions.exercise02;
+
 public class OutOfRangeException extends Exception {
     private static final long serialVersionUID = 1L;
 

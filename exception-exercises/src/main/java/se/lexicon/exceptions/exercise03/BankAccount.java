@@ -1,3 +1,5 @@
+package se.lexicon.exceptions.exercise03;
+
 public class BankAccount {
     private double balance;
 

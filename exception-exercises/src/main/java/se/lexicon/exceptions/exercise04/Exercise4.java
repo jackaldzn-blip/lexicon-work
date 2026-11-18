@@ -1,3 +1,5 @@
+package se.lexicon.exceptions.exercise04;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -9,9 +11,9 @@ import java.util.Scanner;
 public class Exercise4 {
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
-            System.out.print("File name [numbers.txt]: ");
+            System.out.print("File name [samples/exercise-04/numbers.txt]: ");
             String input = scanner.nextLine().trim();
-            Path path = Path.of(input.isEmpty() ? "numbers.txt" : input);
+            Path path = Path.of(input.isEmpty() ? "samples/exercise-04/numbers.txt" : input);
 
             // Outer try/catch is responsible for file access errors.
             try {

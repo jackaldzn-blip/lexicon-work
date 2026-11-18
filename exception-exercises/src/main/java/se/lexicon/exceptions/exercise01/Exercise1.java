@@ -1,3 +1,5 @@
+package se.lexicon.exceptions.exercise01;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 

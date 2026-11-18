@@ -1,3 +1,5 @@
+package se.lexicon.exceptions.exercise06;
+
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
