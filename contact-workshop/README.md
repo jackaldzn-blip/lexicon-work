@@ -1,26 +1,82 @@
-# Contact App Workshop — Java Exceptions & MVC
+# Contact App Workshop
 
-A complete solution to the [Lexicon Exception Workshop](Exception_Workshop.md): a **Java 25** console application that saves contacts to a UTF-8 text file.
+A Java 25 Maven console application for managing contacts in a text file. Built for the Lexicon exception-handling workshop using the MVC pattern.
 
-**Maven coordinates:** `se.lexicon:contact-app-workshop:1.0-SNAPSHOT`
+## Features
 
-## Requirements
+- Add, list, and search for contacts by name.
+- Validate names and 10-digit phone numbers with `IllegalArgumentException`.
+- Prevent duplicate names using `DuplicateContactException` (checked).
+- Handle file problems using `ContactStorageException` (checked).
+- Save contacts in `data/contacts.txt` using try-with-resources.
+- Keep user interaction in the View and errors in a centralized `ExceptionHandler`.
 
-- **JDK 25** (required: the Maven compiler targets `--release 25`)
-- **Apache Maven 3.9+** (for the build and JUnit tests)
+## UML class diagram
 
-## Run
+```mermaid
+classDiagram
+    direction TB
+    class App {
+        +main(String[] args)$ void
+    }
+    class Contact {
+        -String name
+        -String phoneNumber
+        +Contact(String name, String phoneNumber)
+        +getName() String
+        +setName(String name) void
+        +getPhoneNumber() String
+        +setPhoneNumber(String phoneNumber) void
+    }
+    class ContactDAO {
+        <<interface>>
+        +findAll() List~Contact~
+        +save(Contact contact) void
+        +findByName(String name) Contact
+    }
+    class FileContactDAOImpl {
+        -Path filePath
+        +FileContactDAOImpl(Path filePath)
+    }
+    class ContactView {
+        +displayMenu() void
+        +getUserInput(String prompt) String
+        +displayContacts(List~Contact~ contacts) void
+        +displayMessage(String message) void
+        +displayError(String message) void
+    }
+    class ContactController {
+        -ContactDAO contactDAO
+        -ContactView contactView
+        +run() void
+    }
+    class ExceptionHandler {
+        +handle(Exception e) void
+    }
+    class ContactStorageException
+    class DuplicateContactException
+    class Exception
 
-Check that Maven uses your JDK 25 installation:
-
-```bash
-java -version
-mvn -version
+    ContactDAO <|.. FileContactDAOImpl : implements
+    App ..> ContactController : starts
+    ContactController --> ContactDAO : uses
+    ContactController --> ContactView : uses
+    ContactController --> ExceptionHandler : handles errors
+    ContactDAO ..> Contact : stores
+    FileContactDAOImpl ..> ContactStorageException : throws
+    FileContactDAOImpl ..> DuplicateContactException : throws
+    Exception <|-- ContactStorageException
+    Exception <|-- DuplicateContactException
+    ExceptionHandler --> ContactView : displays errors
 ```
 
-Both commands should report Java 25. If Maven reports another Java version, set `JAVA_HOME` to your JDK 25 installation and reopen the terminal.
+**MVC:** `Contact` is the model; `ContactView` handles console input/output; `ContactController` coordinates actions; `ContactDAO` and `FileContactDAOImpl` handle persistence. Invalid model data throws an unchecked `IllegalArgumentException`; file and duplicate errors use checked exceptions.
 
-Open a terminal **inside `contact-workshop/`**:
+## Build and run
+
+Requirements: **JDK 25** and **Maven 3.9+**.
+
+From the `contact-workshop` folder:
 
 ```bash
 mvn clean test
@@ -28,251 +84,10 @@ mvn package
 java -cp target/classes se.lexicon.App
 ```
 
-On first save, the app creates `data/contacts.txt`. The data directory is ignored by Git.
-
-To use a different text file (also useful for testing), pass its path:
+To choose a different contacts file:
 
 ```bash
-java -cp target/classes se.lexicon.App my-contacts.txt
+java -cp target/classes se.lexicon.App contacts.txt
 ```
 
-Example session:
-
-```text
-=== Contact App ===
-1. List all contacts
-2. Add a contact
-3. Find contact by name
-0. Exit
-Choose an option: 2
-Name: Anna
-Phone number (10 digits): 0123456789
-Contact saved successfully.
-```
-
-## Features
-
-1. **List all contacts** from the text file, or display an empty-state message.
-2. **Add a contact** after validating its name and phone number.
-3. **Find by name**, ignoring letter case and surrounding spaces.
-4. **Prevent duplicates:** two stored contacts cannot have the same name (case-insensitive).
-5. **Handle failures gracefully:** invalid input, duplicate names, malformed files, and file IO failures do not crash the menu.
-6. **Quit** using `0` or end-of-input.
-
-Phone numbers must be **exactly 10 ASCII digits** (`[0-9]{10}`), as specified in the exercise. The program does not accept `+46`, spaces, or hyphens. Names must be nonblank and cannot contain tabs or newlines. Commas and international characters in names are supported.
-
-## Detailed technical UML diagrams
-
-The **class diagram below is native Mermaid**, rendered by GitHub from the Markdown source. To edit it, update [`docs/uml/class-diagram.mmd`](docs/uml/class-diagram.mmd) and the matching diagram block in this README.
-
-```mermaid
-classDiagram
-    direction TB
-    namespace bootstrap {
-        class App {
-            +main(String[] args)$ void
-        }
-    }
-    namespace model {
-        class Contact {
-            -String name
-            -String phoneNumber
-            +Contact(String name, String phoneNumber)
-            +getName() String
-            +setName(String name) void
-            +getPhoneNumber() String
-            +setPhoneNumber(String phoneNumber) void
-            +toString() String
-            +equals(Object other) boolean
-            +hashCode() int
-        }
-    }
-    namespace data {
-        class ContactDAO {
-            <<interface>>
-            +findAll() List~Contact~
-            +save(Contact contact) void
-            +findByName(String name) Contact
-        }
-        class FileContactDAOImpl {
-            -Path filePath
-            +FileContactDAOImpl(Path filePath)
-            +findAll() List~Contact~
-            +save(Contact contact) void
-            +findByName(String name) Contact
-        }
-    }
-    namespace view {
-        class ContactView {
-            -Scanner scanner
-            -PrintStream out
-            +ContactView(Scanner scanner, PrintStream out)
-            +displayMenu() void
-            +getUserInput(String prompt) String
-            +displayContacts(List~Contact~ contacts) void
-            +displayMessage(String message) void
-            +displayError(String message) void
-        }
-    }
-    namespace controller {
-        class ContactController {
-            -ContactDAO contactDAO
-            -ContactView contactView
-            -ExceptionHandler exceptionHandler
-            +ContactController(ContactDAO dao, ContactView view)
-            +run() void
-            -addContact() boolean
-            -searchContact() boolean
-        }
-    }
-    namespace exception {
-        class ContactStorageException {
-            +ContactStorageException(String message)
-            +ContactStorageException(String message, Throwable cause)
-        }
-        class DuplicateContactException {
-            +DuplicateContactException(String message)
-        }
-        class ExceptionHandler {
-            -ContactView view
-            +ExceptionHandler(ContactView view)
-            +handle(Exception exception) void
-        }
-    }
-    class Exception
-    class RuntimeException
-    class IllegalArgumentException
-
-    ContactDAO <|.. FileContactDAOImpl : implements
-    Exception <|-- ContactStorageException : checked
-    Exception <|-- DuplicateContactException : checked
-    Exception <|-- RuntimeException
-    RuntimeException <|-- IllegalArgumentException : unchecked
-    App ..> FileContactDAOImpl : creates
-    App ..> ContactView : creates
-    App ..> ContactController : starts
-    ContactController --> ContactDAO : DAO contract
-    ContactController --> ContactView : user interaction
-    ContactController *-- ExceptionHandler : owns
-    ContactController ..> Contact : constructs
-    ContactDAO ..> Contact : persists
-    FileContactDAOImpl ..> ContactStorageException : throws
-    FileContactDAOImpl ..> DuplicateContactException : throws
-    Contact ..> IllegalArgumentException : throws on invalid fields
-    ExceptionHandler --> ContactView : displays error
-```
-
-The project includes a **technical architecture reference** that documents the Java code, not just the initial workshop sketch:
-
-**[Open all UML diagrams and technical explanations](docs/uml/technical-uml.md)**
-
-- Detailed UML class diagram: fields, method signatures, visibility, inheritance, interface realization, and relationships.
-- Component/package architecture with clear MVC and persistence boundaries.
-- Sequence diagrams for **adding**, **listing**, and **finding** contacts, including exception paths.
-- Controller activity flow and menu lifecycle.
-- Checked versus unchecked exception type hierarchy.
-- Runtime deployment, UTF-8 text-file structure, and exception contract table.
-- **Mermaid-only source:** seven editable `.mmd` diagram files and seven corresponding fenced `mermaid` blocks in `technical-uml.md`. GitHub renders the Markdown blocks natively.
-
-The Mermaid diagrams render inline in [`technical-uml.md`](docs/uml/technical-uml.md). The `.mmd` files are the editable Mermaid sources, and no image export or external diagram renderer is needed.
-
-## Project structure
-
-```text
-contact-workshop/
-├── pom.xml
-├── README.md
-├── Exception_Workshop.md
-├── .gitignore
-├── docs/
-│   └── uml/
-│       ├── technical-uml.md          # Documentation + 7 GitHub-rendered Mermaid diagrams
-│       ├── class-diagram.mmd         # Detailed UML classes and relationships
-│       ├── component-diagram.mmd     # Architecture and package boundaries
-│       ├── add-contact-sequence.mmd  # Save contact: successful and error paths
-│       ├── read-search-sequence.mmd  # List and search contacts
-│       ├── controller-activity.mmd   # Menu loop and controller decisions
-│       ├── exception-hierarchy.mmd  # Checked and unchecked exceptions
-│       └── runtime-deployment.mmd   # JVM and filesystem model
-└── src/
-    ├── main/java/se/lexicon/
-    │   ├── App.java
-    │   ├── model/Contact.java
-    │   ├── data/ContactDAO.java
-    │   ├── data/FileContactDAOImpl.java
-    │   ├── view/ContactView.java
-    │   ├── controller/ContactController.java
-    │   └── exception/
-    │       ├── ContactStorageException.java
-    │       ├── DuplicateContactException.java
-    │       └── ExceptionHandler.java
-    └── test/java/se/lexicon/
-        ├── model/ContactTest.java
-        ├── data/FileContactDAOImplTest.java
-        └── controller/ContactControllerTest.java
-```
-
-## MVC explained (workshop question 5)
-
-**MVC** means **Model–View–Controller**. It separates the application into components with distinct responsibilities:
-
-- **Model:** `Contact` represents and validates a contact. Its setter/constructor methods throw `IllegalArgumentException`, an **unchecked** exception, when data is invalid.
-- **View:** `ContactView` handles all user interaction, including `Scanner` input, displaying menus, contacts, and errors. No other layer writes to the console.
-- **Controller:** `ContactController` reads user choices, creates `Contact` objects, asks the DAO to save/read them, and delegates exceptions to `ExceptionHandler`.
-- **Data (DAO):** `ContactDAO` defines persistence operations; `FileContactDAOImpl` implements them using a text file and **try-with-resources** for automatically closing the reader/writer.
-- **Exception layer:** `DuplicateContactException` and `ContactStorageException` extend `Exception` and are therefore **checked**; callers must catch or declare them. `ExceptionHandler` converts all application errors into friendly View messages.
-
-### Request and exception flow
-
-```mermaid
-flowchart TD
-    User[User] --> View[ContactView]
-    View --> Controller[ContactController]
-    Controller --> Model[Contact / validation]
-    Controller --> DAO[ContactDAO]
-    DAO --> File[contacts.txt]
-    Model -- IllegalArgumentException --> Handler[ExceptionHandler]
-    DAO -- Checked exceptions --> Handler
-    Controller --> Handler
-    Handler --> View
-```
-
-For example, when the user saves a contact, the controller creates a `Contact` (which validates the input). The controller then calls `ContactDAO.save`. The DAO checks for duplicate names and appends a valid contact to the file. A failed operation throws an exception back to the controller; the centralized handler tells the View what error message to show. This separation makes validation and persistence independently testable.
-
-## File format and error behavior
-
-Stored records look like:
-
-```text
-Anna\t0123456789
-Noah\t0987654321
-```
-
-`\t` in the example above represents a **literal tab character** between the two fields; each contact is on its own line. The file uses UTF-8. A missing file means the contact list is empty. An unreadable file, invalid saved record, or duplicate name in the stored data raises `ContactStorageException`. A new duplicate name raises `DuplicateContactException` **before** any write occurs.
-
-## Automated tests
-
-Using **JDK 25**:
-
-```bash
-mvn test
-```
-
-JUnit 5 (5.14.4) tests check validation, Unicode names, save/reload, missing files, case-insensitive duplicate detection and lookup, malformed saved data, IO failures, controller navigation, error recovery, and end-of-input.
-
-## Add this folder to `jackaldzn-blip/lexicon-work`
-
-The repository's root `.gitignore` already whitelists `contact-workshop/`. This updated package replaces only that subproject folder; do not remove other repository folders.
-
-1. Extract the ZIP **into your existing `lexicon-work` folder** so `lexicon-work/contact-workshop/pom.xml` exists (do not extract into `exception-exercises/`).
-2. From the **repository root**, run:
-
-   ```bash
-   git add contact-workshop
-   git commit -m "Add completed Contact App exception workshop"
-   git push origin main
-   ```
-
-3. Submit: `https://github.com/jackaldzn-blip/lexicon-work/tree/main/contact-workshop`
-
-**Important:** This ZIP is a subproject to add to an existing repository; it does not contain or replace the repository's `.git` folder or its existing exercises.
+The default data file (`data/contacts.txt`) is created when you save your first contact and is excluded from Git.
