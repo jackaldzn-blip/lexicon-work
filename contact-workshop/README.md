@@ -63,7 +63,104 @@ Phone numbers must be **exactly 10 ASCII digits** (`[0-9]{10}`), as specified in
 
 ## Detailed technical UML diagrams
 
-![Detailed UML class diagram for the Contact App](docs/uml/class-diagram.svg)
+The **class diagram below is native Mermaid**, rendered by GitHub from the Markdown source. To edit it, update [`docs/uml/class-diagram.mmd`](docs/uml/class-diagram.mmd) and the matching diagram block in this README.
+
+```mermaid
+classDiagram
+    direction TB
+    namespace bootstrap {
+        class App {
+            +main(String[] args)$ void
+        }
+    }
+    namespace model {
+        class Contact {
+            -String name
+            -String phoneNumber
+            +Contact(String name, String phoneNumber)
+            +getName() String
+            +setName(String name) void
+            +getPhoneNumber() String
+            +setPhoneNumber(String phoneNumber) void
+            +toString() String
+            +equals(Object other) boolean
+            +hashCode() int
+        }
+    }
+    namespace data {
+        class ContactDAO {
+            <<interface>>
+            +findAll() List~Contact~
+            +save(Contact contact) void
+            +findByName(String name) Contact
+        }
+        class FileContactDAOImpl {
+            -Path filePath
+            +FileContactDAOImpl(Path filePath)
+            +findAll() List~Contact~
+            +save(Contact contact) void
+            +findByName(String name) Contact
+        }
+    }
+    namespace view {
+        class ContactView {
+            -Scanner scanner
+            -PrintStream out
+            +ContactView(Scanner scanner, PrintStream out)
+            +displayMenu() void
+            +getUserInput(String prompt) String
+            +displayContacts(List~Contact~ contacts) void
+            +displayMessage(String message) void
+            +displayError(String message) void
+        }
+    }
+    namespace controller {
+        class ContactController {
+            -ContactDAO contactDAO
+            -ContactView contactView
+            -ExceptionHandler exceptionHandler
+            +ContactController(ContactDAO dao, ContactView view)
+            +run() void
+            -addContact() boolean
+            -searchContact() boolean
+        }
+    }
+    namespace exception {
+        class ContactStorageException {
+            +ContactStorageException(String message)
+            +ContactStorageException(String message, Throwable cause)
+        }
+        class DuplicateContactException {
+            +DuplicateContactException(String message)
+        }
+        class ExceptionHandler {
+            -ContactView view
+            +ExceptionHandler(ContactView view)
+            +handle(Exception exception) void
+        }
+    }
+    class Exception
+    class RuntimeException
+    class IllegalArgumentException
+
+    ContactDAO <|.. FileContactDAOImpl : implements
+    Exception <|-- ContactStorageException : checked
+    Exception <|-- DuplicateContactException : checked
+    Exception <|-- RuntimeException
+    RuntimeException <|-- IllegalArgumentException : unchecked
+    App ..> FileContactDAOImpl : creates
+    App ..> ContactView : creates
+    App ..> ContactController : starts
+    ContactController --> ContactDAO : DAO contract
+    ContactController --> ContactView : user interaction
+    ContactController *-- ExceptionHandler : owns
+    ContactController ..> Contact : constructs
+    ContactDAO ..> Contact : persists
+    FileContactDAOImpl ..> ContactStorageException : throws
+    FileContactDAOImpl ..> DuplicateContactException : throws
+    Contact ..> IllegalArgumentException : throws on invalid fields
+    ExceptionHandler --> ContactView : displays error
+```
 
 The project includes a **technical architecture reference** that documents the Java code, not just the initial workshop sketch:
 
@@ -75,9 +172,9 @@ The project includes a **technical architecture reference** that documents the J
 - Controller activity flow and menu lifecycle.
 - Checked versus unchecked exception type hierarchy.
 - Runtime deployment, UTF-8 text-file structure, and exception contract table.
-- **Editable diagrams:** seven `.mmd` files (native GitHub Mermaid rendering), three `.puml` files (PlantUML) and editable `class-diagram.dot` with an exported SVG.
+- **Mermaid-only source:** seven editable `.mmd` diagram files and seven corresponding fenced `mermaid` blocks in `technical-uml.md`. GitHub renders the Markdown blocks natively.
 
-These diagrams are stored under [`docs/uml/`](docs/uml/) and can be viewed on GitHub directly; no additional diagram tooling is required for the Mermaid documentation.
+The Mermaid diagrams render inline in [`technical-uml.md`](docs/uml/technical-uml.md). The `.mmd` files are the editable Mermaid sources, and no image export or external diagram renderer is needed.
 
 ## Project structure
 
@@ -89,11 +186,14 @@ contact-workshop/
 ├── .gitignore
 ├── docs/
 │   └── uml/
-│       ├── technical-uml.md          # Technical documentation + 7 GitHub Mermaid diagrams
-│       ├── class-diagram.svg         # Rendered UML class reference image
-│       ├── class-diagram.dot         # Editable source of the SVG
-│       ├── *.mmd                     # 7 editable Mermaid diagrams
-│       └── *.puml                    # 3 editable PlantUML diagrams
+│       ├── technical-uml.md          # Documentation + 7 GitHub-rendered Mermaid diagrams
+│       ├── class-diagram.mmd         # Detailed UML classes and relationships
+│       ├── component-diagram.mmd     # Architecture and package boundaries
+│       ├── add-contact-sequence.mmd  # Save contact: successful and error paths
+│       ├── read-search-sequence.mmd  # List and search contacts
+│       ├── controller-activity.mmd   # Menu loop and controller decisions
+│       ├── exception-hierarchy.mmd  # Checked and unchecked exceptions
+│       └── runtime-deployment.mmd   # JVM and filesystem model
 └── src/
     ├── main/java/se/lexicon/
     │   ├── App.java

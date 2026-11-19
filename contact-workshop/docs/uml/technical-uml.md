@@ -2,7 +2,7 @@
 
 > **Java 25** | `se.lexicon:contact-app-workshop` | MVC + DAO + checked/unchecked exceptions | file-based persistence
 
-This document diagrams the **actual implementation** in `src/main/java/se/lexicon`, rather than only the simplified conceptual class diagram supplied by the workshop. The Mermaid diagrams below render directly on GitHub; matching editable `.mmd` files are in this directory. A standalone rendered `class-diagram.svg` and an editable `class-diagram.dot` are included for quick previews or use in other documentation.
+This document diagrams the **actual implementation** in `src/main/java/se/lexicon`, rather than only the simplified conceptual class diagram supplied by the workshop. All seven diagrams below use **Mermaid** code blocks that render directly in GitHub Markdown. Each also has a matching editable `.mmd` source file in this directory. No exported images or alternative diagram languages are included.
 
 ## Source-of-truth and notation
 
@@ -417,7 +417,7 @@ For production use, common extensions would include atomic write/replace, file l
 
 ## 11. Where to inspect the diagrams
 
-- **GitHub preview:** open `docs/uml/technical-uml.md` or the linked diagram in the project README; Mermaid renders inline.
-- **Standalone visual:** open `docs/uml/class-diagram.svg` in a browser or image viewer.
-- **Editable sources:** `docs/uml/*.mmd`; the Graphviz artwork is generated from `docs/uml/class-diagram.dot`.
-- **Original conceptual model:** `Exception_Workshop.md`.
+- **GitHub preview:** open [`technical-uml.md`](technical-uml.md) for all seven Mermaid diagrams, or [`README.md`](../../README.md) for the class diagram.
+- **Editable sources:** the seven [`*.mmd`](./) files in this folder. These are plain-text Mermaid sources.
+- **Editing:** use a `mermaid` fenced code block in Markdown for GitHub rendering; update the corresponding `.mmd` source when changing a diagram.
+- **Original conceptual model:** [`Exception_Workshop.md`](../../Exception_Workshop.md).
