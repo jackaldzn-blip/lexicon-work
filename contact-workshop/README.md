@@ -1,15 +1,24 @@
 # Contact App Workshop — Java Exceptions & MVC
 
-A complete solution to the [Lexicon Exception Workshop](Exception_Workshop.md): a Java 17 console application that saves contacts to a UTF-8 text file.
+A complete solution to the [Lexicon Exception Workshop](Exception_Workshop.md): a **Java 25** console application that saves contacts to a UTF-8 text file.
 
 **Maven coordinates:** `se.lexicon:contact-app-workshop:1.0-SNAPSHOT`
 
 ## Requirements
 
-- Java Development Kit **17 or newer**
-- Apache Maven **3.8+** (for the standard build and JUnit tests)
+- **JDK 25** (required: the Maven compiler targets `--release 25`)
+- **Apache Maven 3.9+** (for the build and JUnit tests)
 
 ## Run
+
+Check that Maven uses your JDK 25 installation:
+
+```bash
+java -version
+mvn -version
+```
+
+Both commands should report Java 25. If Maven reports another Java version, set `JAVA_HOME` to your JDK 25 installation and reopen the terminal.
 
 Open a terminal **inside `contact-workshop/`**:
 
@@ -52,6 +61,24 @@ Contact saved successfully.
 
 Phone numbers must be **exactly 10 ASCII digits** (`[0-9]{10}`), as specified in the exercise. The program does not accept `+46`, spaces, or hyphens. Names must be nonblank and cannot contain tabs or newlines. Commas and international characters in names are supported.
 
+## Detailed technical UML diagrams
+
+![Detailed UML class diagram for the Contact App](docs/uml/class-diagram.svg)
+
+The project includes a **technical architecture reference** that documents the Java code, not just the initial workshop sketch:
+
+**[Open all UML diagrams and technical explanations](docs/uml/technical-uml.md)**
+
+- Detailed UML class diagram: fields, method signatures, visibility, inheritance, interface realization, and relationships.
+- Component/package architecture with clear MVC and persistence boundaries.
+- Sequence diagrams for **adding**, **listing**, and **finding** contacts, including exception paths.
+- Controller activity flow and menu lifecycle.
+- Checked versus unchecked exception type hierarchy.
+- Runtime deployment, UTF-8 text-file structure, and exception contract table.
+- **Editable diagrams:** seven `.mmd` files (native GitHub Mermaid rendering), three `.puml` files (PlantUML) and editable `class-diagram.dot` with an exported SVG.
+
+These diagrams are stored under [`docs/uml/`](docs/uml/) and can be viewed on GitHub directly; no additional diagram tooling is required for the Mermaid documentation.
+
 ## Project structure
 
 ```text
@@ -60,6 +87,13 @@ contact-workshop/
 ├── README.md
 ├── Exception_Workshop.md
 ├── .gitignore
+├── docs/
+│   └── uml/
+│       ├── technical-uml.md          # Technical documentation + 7 GitHub Mermaid diagrams
+│       ├── class-diagram.svg         # Rendered UML class reference image
+│       ├── class-diagram.dot         # Editable source of the SVG
+│       ├── *.mmd                     # 7 editable Mermaid diagrams
+│       └── *.puml                    # 3 editable PlantUML diagrams
 └── src/
     ├── main/java/se/lexicon/
     │   ├── App.java
@@ -118,15 +152,17 @@ Noah\t0987654321
 
 ## Automated tests
 
+Using **JDK 25**:
+
 ```bash
 mvn test
 ```
 
-JUnit 5 tests check validation, Unicode names, save/reload, missing files, case-insensitive duplicate detection and lookup, malformed saved data, IO failures, controller navigation, error recovery, and end-of-input.
+JUnit 5 (5.14.4) tests check validation, Unicode names, save/reload, missing files, case-insensitive duplicate detection and lookup, malformed saved data, IO failures, controller navigation, error recovery, and end-of-input.
 
 ## Add this folder to `jackaldzn-blip/lexicon-work`
 
-The repository's root `.gitignore` already whitelists `contact-workshop/`.
+The repository's root `.gitignore` already whitelists `contact-workshop/`. This updated package replaces only that subproject folder; do not remove other repository folders.
 
 1. Extract the ZIP **into your existing `lexicon-work` folder** so `lexicon-work/contact-workshop/pom.xml` exists (do not extract into `exception-exercises/`).
 2. From the **repository root**, run:

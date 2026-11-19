@@ -1,0 +1,42 @@
+sequenceDiagram
+    autonumber
+    actor User
+    participant View as ContactView
+    participant Ctrl as ContactController
+    participant DAO as FileContactDAOImpl
+    participant Contact as Contact (model)
+    participant Disk as contacts.txt
+    participant Handler as ExceptionHandler
+    User->>View: Select 1 (list) or 3 (find by name)
+    View-->>Ctrl: menu choice
+    alt List all (1)
+        Ctrl->>DAO: findAll()
+    else Find by name (3)
+        Ctrl->>View: getUserInput("Name to search: ")
+        View-->>Ctrl: search name
+        Ctrl->>DAO: findByName(name)
+        DAO->>DAO: trim and validate search name
+        DAO->>DAO: findAll()
+    end
+    alt File absent
+        DAO-->>Ctrl: empty list / null
+    else File exists and is valid
+        DAO->>Disk: open UTF-8 BufferedReader
+        loop Each persisted line
+            Disk-->>DAO: name TAB phone
+            DAO->>DAO: split on TAB and check fields
+            DAO->>Contact: new Contact(name, phone)
+            Contact-->>DAO: validated contact
+            DAO->>DAO: ensure unique stored name
+        end
+        DAO->>Disk: close reader automatically
+        DAO-->>Ctrl: List of contacts / matching Contact or null
+    else Bad data or IO error
+        DAO--xCtrl: ContactStorageException
+        Ctrl->>Handler: handle(exception)
+        Handler->>View: displayError("Contact storage problem: ...")
+    end
+    opt Successful DAO result
+        Ctrl->>View: displayContacts(...) or displayMessage(...)
+        View->>User: contacts / no contacts found
+    end

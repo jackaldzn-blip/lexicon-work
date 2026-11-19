@@ -1,0 +1,27 @@
+@startuml
+title Contact App — single-machine deployment
+skinparam shadowing false
+node "Developer computer" as Host {
+  artifact "Terminal (stdin / stdout)" as Term
+  node "Java 25 JVM" as JVM {
+    component "se.lexicon.App" as Entry
+    component "ContactView" as View
+    component "ContactController" as Controller
+    component "ContactDAO\nFileContactDAOImpl" as DAO
+    component "Contact / ExceptionHandler" as Other
+  }
+  folder "data/" as Directory {
+    artifact "contacts.txt\nUTF-8 TAB-separated" as File
+  }
+}
+Term -- View : input / output
+Entry --> Controller : wires and runs
+Controller --> View : prompts / prints
+Controller --> DAO : persistence calls
+Controller --> Other : validation / errors
+DAO -- File : Files.newBufferedReader/newBufferedWriter
+note bottom of File
+  Absent until first successful save.
+  Default location is relative to JVM working directory.
+end note
+@enduml

@@ -1,0 +1,24 @@
+flowchart TD
+    Start([Start App.main]) --> Wire[Create DAO, View and Controller]
+    Wire --> Welcome[Display welcome message]
+    Welcome --> Menu[Display menu]
+    Menu --> Read[Read choice]
+    Read --> EOF{End of input?}
+    EOF -- Yes --> Exit[Display Goodbye]
+    EOF -- No --> Try[Enter controller try/catch]
+    Try --> Choice{Choice}
+    Choice -- 1 --> List[DAO.findAll; displayContacts]
+    Choice -- 2 --> Add[Prompt name and phone; create Contact; DAO.save]
+    Choice -- 3 --> Search[Prompt name; DAO.findByName; show result]
+    Choice -- 0 --> Exit
+    Choice -- Other --> Invalid[Display unknown-option error]
+    List --> Thrown{Exception?}
+    Add --> Thrown
+    Search --> Thrown
+    Thrown -- Yes --> Handler[ExceptionHandler.handle]
+    Thrown -- No --> More{Input ended during operation?}
+    Handler --> Menu
+    More -- Yes --> Exit
+    More -- No --> Menu
+    Invalid --> Menu
+    Exit --> End([End])
