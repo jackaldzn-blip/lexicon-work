@@ -59,4 +59,6 @@ See [all exercise solutions and expected results](docs/SOLUTIONS.md) and the [da
 
 The provided exercises explicitly define courses but refer to lecture tables student and attendance without supplying their full schemas. Minimal supporting schemas and fictional data are included to make this project runnable independently. They may differ from the lecture database. No original lecture material or credentials are published.
 
-Expected outputs are derived from the sample data; a local MySQL execution is required to confirm them.
+## Verification status
+
+All seven scripts were executed locally on Windows using MySQL Server 8.4.9 on 25 November 2026. All 13 exercises passed with the documented results and no SQL errors reported. See the [acceptance test report](docs/TEST_RESULTS.md).

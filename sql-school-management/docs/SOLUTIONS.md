@@ -30,4 +30,4 @@ These notes refer to the numbered tasks in the Lexicon SQL exercise handout. The
 
 An INNER JOIN excludes unmatched records. A LEFT JOIN keeps every student; the joined fields are NULL when no record matches. In exercise 5.3 the Present filter is in the ON clause, rather than WHERE, and COUNT(a.id) ignores NULL. Grouping by ID as well as name avoids combining different students with identical names.
 
-These expected values are calculated from the supplied fictional dataset, not a recorded MySQL test run.
+These expected values were confirmed by the local MySQL 8.4.9 run on 25 November 2026. See [test results](TEST_RESULTS.md).
